@@ -150,25 +150,25 @@ function liri(command, name) {
                         if (err) throw err;
                         // console.log(data);
                         //title
-                        console.log("\nMovie title: \n"+data.Title);
+                        console.log("\nMovie title: \n" + data.Title);
                         console.log('=======================');
                         //year
-                        console.log("Movie year: \n"+data.Year+"\n");
+                        console.log("Movie year: \n" + data.Year + "\n");
                         console.log('=======================');
                         //rotten tomatoes ratings
-                        console.log("Movie ratings on \n"+data.Ratings[1].Source + ": \n" + data.Ratings[1].Value+"\n");
+                        console.log("Movie ratings on \n" + data.Ratings[1].Source + ": \n" + data.Ratings[1].Value + "\n");
                         console.log('=======================');
                         //country
-                        console.log("Movie Country: \n"+data.Country+"\n");
+                        console.log("Movie Country: \n" + data.Country + "\n");
                         console.log('=======================');
                         // language of the movie
-                        console.log("Movie Language: \n"+data.Language+"\n");
+                        console.log("Movie Language: \n" + data.Language + "\n");
                         console.log('=======================');
                         //plot
-                        console.log("Movie Plot: \n"+data.Plot+"\n");
+                        console.log("Movie Plot: \n" + data.Plot + "\n");
                         console.log('=======================');
                         //actors in the movie
-                        console.log("Casts of the movie: "+data.Actors);
+                        console.log("Casts of the movie: " + data.Actors);
                         console.log('=======================');
                     });
                 } else {
