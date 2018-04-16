@@ -26,8 +26,8 @@ if (command == 'do-what-it-says') {
         var a = data.split(',');
         var b = a[0];
         var c = a[1];
-    //calling the function if the command is 'do-what-it-says'
-        choco(b,c);
+        //calling the function if the command is 'do-what-it-says'
+        choco(b, c);
     })
 } else {
     //function that take in everything except the do-what-liri-says
@@ -39,11 +39,17 @@ function choco(command, name) {
     switch (command) {
         //tweeter portion
         case 'my-tweets':
+            var params = {
+                screen_name: 'AAHan86',
+                count: 10
+            };
             //using 'get' using the variable client that I have defined above
-            client.get('favorites/list', function (error, tweets, response) {
-                if (error) throw error;
-                console.log(tweets);  // The favorites. 
-                console.log(response);  // Raw response object. 
+            client.get('statuses/user_timeline', params, function (error, tweets, response) {
+                if (!error) {
+                    for (i = 0; i < tweets.length; i++) {
+                        console.log(`============================ \n On ${tweets[i].created_at}: \n \n ${tweets[i].text} \n ============================`);
+                    }
+                }
             });
             //using 'post'
             // client.post('statuses/update', {status: name}, function(error, tweet, reponse) {
