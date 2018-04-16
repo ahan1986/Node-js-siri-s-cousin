@@ -22,44 +22,55 @@ for (var i = 4; i < process.argv.length; i++) {
     name += " " + process.argv[i];
 }
 
-inquirer.prompt([
-    {
-        type: 'list',
-        message: "Hello, What would like Liri to do?",
-        name: 'list',
-        choices: ["Look at my tweets", "Spotify a song", "Get information on a movie", 'do what it says']
-    }
-]).then(function (drew) {
-    console.log(drew.list);
-    if (drew.list == 'Look at my tweets') {
-        // tweets here
-        liri('my-tweets');
-    } else if (drew.list == 'Spotify a song') {
-        // spotify stuff here
-        inquirer.prompt([
-            {
-                type: 'input',
-                message: 'Which song would you like to get information on Spotify?',
-                name: 'input'
-            }
-        ]).then(function (spot) {
-            liri('spotify-this-song', spot.input);
-        })
-    } else if (drew.list == 'Get information on a movie') {
-        // movie information here
-        inquirer.prompt([
-            {
-                type: 'input',
-                message: 'What movie would you like to get information on?',
-                name: 'movie'
-            }
-        ]).then(function (mov) {
-            liri('movie-this', mov.movie);
-        })
-    } else {
-        liri("do-what-it-says");
-    }
-})
+
+
+
+function askLiri() {
+    inquirer.prompt([
+        {
+            type: 'list',
+            message: "Hello, What would like Liri to do?",
+            name: 'list',
+            choices: ["Look at my tweets", "Spotify a song", "Get information on a movie", 'do what it says']
+        }
+    ]).then(function (drew) {
+        console.log(drew.list);
+        if (drew.list == 'Look at my tweets') {
+            // tweets here
+            liri('my-tweets');
+        } else if (drew.list == 'Spotify a song') {
+            // spotify stuff here
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    message: 'Which song would you like to get information on Spotify?',
+                    name: 'input'
+                }
+            ]).then(function (spot) {
+                liri('spotify-this-song', spot.input);
+            })
+        } else if (drew.list == 'Get information on a movie') {
+            // movie information here
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    message: 'What movie would you like to get information on?',
+                    name: 'movie'
+                }
+            ]).then(function (mov) {
+                liri('movie-this', mov.movie);
+            })
+        } else {
+            liri("do-what-it-says");
+        }
+    })
+}
+
+askLiri();
+
+
+
+
 
 function liri(command, name) {
     // if command is do-what-it-says
@@ -92,23 +103,26 @@ function liri(command, name) {
                         for (i = 0; i < tweets.length; i++) {
                             console.log(`============================ \n On ${tweets[i].created_at}: \n \n ${tweets[i].text} \n ============================`);
                         }
+
                     }
                 });
-                //using 'post'
-                // client.post('statuses/update', {status: name}, function(error, tweet, reponse) {
-                //     if(error) throw error;
-                //     console.log(tweet);
-                //     // console.log(response);
-                // })
+
+                //creating a setTimeOut to get the user couple seconds before Liri asks the user their commands
+                setTimeout(function () {
+                    askLiri()
+                }, 3000);
                 break;
 
             // spotify portion
             case 'spotify-this-song':
                 //using variable spotify that i defined above
-                if (name !== undefined) {
+                if (name !== undefined && name !== null && name !== '') {
                     spotify.search({ type: 'album', query: name }, function (err, data) {
                         if (err) {
-                            console.log("there was an error somewhere with the spotify " + err);
+                            console.log("*=*=*=*=* *=*=*=*=* *=*=*=*=*");
+                            console.log("\nSong Not found. Try Again \n");
+                            console.log("*=*=*=*=* *=*=*=*=* *=*=*=*=*\n");
+                            askLiri();
                         }
                         var spot = data.albums.items;
                         for (var i = 0; i < spot.length; i++) {
@@ -120,7 +134,16 @@ function liri(command, name) {
                             console.log(`${i + 1}: \n Artists: ${artists} \n Title: ${title} \n Preview Link: ${urlSpot} \n Album Type: ${album} \n`);
                             console.log("===================================== \n");
                         }
+
+                        //creating a setTimeOut to get the user couple seconds before Liri asks the user their commands
+                        setTimeout(function () {
+                            askLiri()
+                        }, 3000);
                     })
+
+
+
+
                 } else {
                     spotify.search({ type: 'album', query: 'Ace of Base' }, function (err, data) {
                         if (err) {
@@ -137,41 +160,64 @@ function liri(command, name) {
                             console.log("===================================== \n");
                         }
                     })
+
+
+                    //creating a setTimeOut to get the user couple seconds before Liri asks the user their commands
+                    setTimeout(function () {
+                        askLiri()
+                    }, 3000);
+
                 }
                 break;
 
             case 'movie-this':
+
                 if (name !== undefined) {
                     var params = {
                         apiKey: 'trilogy',
                         title: name
                     }
                     omdbApi.get(params, function (err, data) {
-                        if (err) throw err;
-                        // console.log(data);
-                        //title
-                        console.log("\nMovie title: \n" + data.Title);
-                        console.log('=======================');
-                        //year
-                        console.log("Movie year: \n" + data.Year + "\n");
-                        console.log('=======================');
-                        //rotten tomatoes ratings
-                        console.log("Movie ratings on \n" + data.Ratings[1].Source + ": \n" + data.Ratings[1].Value + "\n");
-                        console.log('=======================');
-                        //country
-                        console.log("Movie Country: \n" + data.Country + "\n");
-                        console.log('=======================');
-                        // language of the movie
-                        console.log("Movie Language: \n" + data.Language + "\n");
-                        console.log('=======================');
-                        //plot
-                        console.log("Movie Plot: \n" + data.Plot + "\n");
-                        console.log('=======================');
-                        //actors in the movie
-                        console.log("Casts of the movie: " + data.Actors);
-                        console.log('=======================');
+                        if (err) {
+                            console.log("*=*=*=*=* *=*=*=*=* *=*=*=*=*");
+                            console.log("\nMovie Not found. Try Again \n");
+                            console.log("*=*=*=*=* *=*=*=*=* *=*=*=*=*\n");
+                        }
+                        if (data == null) {
+                            askLiri();
+                        } else {
+                            // console.log(data);
+                            //title
+                            console.log("\nMovie title: \n" + data.Title);
+                            console.log('=======================');
+                            //year
+                            console.log("Movie year: \n" + data.Year + "\n");
+                            console.log('=======================');
+                            //rotten tomatoes ratings
+                            console.log("Movie ratings on \n" + data.Ratings[0].Source + ": \n" + data.Ratings[0].Value + "\n");
+                            console.log('=======================');
+                            //country
+                            console.log("Movie Country: \n" + data.Country + "\n");
+                            console.log('=======================');
+                            // language of the movie
+                            console.log("Movie Language: \n" + data.Language + "\n");
+                            console.log('=======================');
+                            //plot
+                            console.log("Movie Plot: \n" + data.Plot + "\n");
+                            console.log('=======================');
+                            //actors in the movie
+                            console.log("Casts of the movie: \n" + data.Actors);
+                            console.log('=======================');
+
+                            //creating a setTimeOut to get the user couple seconds before Liri asks the user their commands
+                            setTimeout(function () {
+                                askLiri()
+                            }, 3000);
+                        }
                     });
-                } else {
+
+                }
+                if (name == undefined) {
                     var params = {
                         apiKey: 'trilogy',
                         title: 'Mr. Nobody'
@@ -195,6 +241,7 @@ function liri(command, name) {
                         console.log(data.Actors);
                     });
                 }
+
                 break;
         }
     }
