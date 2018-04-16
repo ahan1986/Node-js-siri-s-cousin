@@ -29,12 +29,12 @@ inquirer.prompt([
         name: 'list',
         choices: ["Look at my tweets", "Spotify a song", "Get information on a movie", 'do what it says']
     }
-]). then(function(drew) {
+]).then(function (drew) {
     console.log(drew.list);
-    if(drew.list == 'Look at my tweets') {
+    if (drew.list == 'Look at my tweets') {
         // tweets here
         liri('my-tweets');
-    } else if(drew.list == 'Spotify a song') {
+    } else if (drew.list == 'Spotify a song') {
         // spotify stuff here
         inquirer.prompt([
             {
@@ -42,10 +42,10 @@ inquirer.prompt([
                 message: 'Which song would you like to get information on Spotify?',
                 name: 'input'
             }
-        ]).then(function(spot) {
+        ]).then(function (spot) {
             liri('spotify-this-song', spot.input);
         })
-    } else if(drew.list == 'Get information on a movie') {
+    } else if (drew.list == 'Get information on a movie') {
         // movie information here
         inquirer.prompt([
             {
@@ -53,11 +53,11 @@ inquirer.prompt([
                 message: 'What movie would you like to get information on?',
                 name: 'movie'
             }
-        ]).then(function(mov) {
+        ]).then(function (mov) {
             liri('movie-this', mov.movie);
         })
     } else {
-
+        liri("do-what-it-says");
     }
 })
 
@@ -150,19 +150,26 @@ function liri(command, name) {
                         if (err) throw err;
                         // console.log(data);
                         //title
-                        console.log(data.Title);
+                        console.log("\nMovie title: \n"+data.Title);
+                        console.log('=======================');
                         //year
-                        console.log(data.Year);
+                        console.log("Movie year: \n"+data.Year+"\n");
+                        console.log('=======================');
                         //rotten tomatoes ratings
-                        console.log(data.Ratings[1].Source + ": " + data.Ratings[1].Value);
+                        console.log("Movie ratings on \n"+data.Ratings[1].Source + ": \n" + data.Ratings[1].Value+"\n");
+                        console.log('=======================');
                         //country
-                        console.log(data.Country);
+                        console.log("Movie Country: \n"+data.Country+"\n");
+                        console.log('=======================');
                         // language of the movie
-                        console.log(data.Language);
+                        console.log("Movie Language: \n"+data.Language+"\n");
+                        console.log('=======================');
                         //plot
-                        console.log(data.Plot);
+                        console.log("Movie Plot: \n"+data.Plot+"\n");
+                        console.log('=======================');
                         //actors in the movie
-                        console.log(data.Actors);
+                        console.log("Casts of the movie: "+data.Actors);
+                        console.log('=======================');
                     });
                 } else {
                     var params = {
